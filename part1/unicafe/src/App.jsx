@@ -1,35 +1,82 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Button=({handler, text})=><button onClick={handler}>{text}</button>
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+const Header=({text})=><h1>{text}</h1>
+
+const StatisticLine=({text, stat})=>{
+  if(text==='positive'){
+    return(
+      <tr><td>{text} {stat} %</td></tr>
+    )
+  }
+  return(
+    <tr><td>{text} {stat}</td></tr>
   )
+}
+
+const Statistics=({g, n, b})=>{
+  const total=g+b+n;
+  const average=(g*1+b*-1)/total;
+  const positivePercentage=g/total*100;
+  
+  if(total>0){
+    return(
+      <div>
+        <table>
+          <tbody>
+            <StatisticLine text='good' stat={g}/>
+            <StatisticLine text='neutral' stat={n}/>
+            <StatisticLine text='bad' stat={b}/>
+            <StatisticLine text='all' stat={total}/>
+            <StatisticLine text='average' stat={average}/>
+            <StatisticLine text='positive' stat={positivePercentage}/>
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
+  return(
+    
+    <div>
+      <p>No feedback given</p>
+    </div>
+  )
+  
+}
+
+const App=()=>{
+  const [good, setGood]=useState(0);
+  const [neutral, setNeutral]=useState(0);
+  const [bad, setBad]=useState(0);
+
+  const handleGood=()=>{
+    setGood(good+1);
+  }
+
+  const handleBad=()=>{
+    setBad(bad+1);
+  }
+
+  const handleNeutral=()=>{
+    setNeutral(neutral+1);
+  }
+
+  return(
+    <div>
+
+      <Header text={'give feedback'}/>
+      <Button handler={handleGood} text={'good'}/>
+      <Button handler={handleNeutral} text={'neutral'}/>
+      <Button handler={handleBad} text={'bad'}/>
+      <Header text={'statistics'}/>
+      <Statistics g={good} n={neutral} b={bad}/>
+      
+    </div>
+  );
 }
 
 export default App
